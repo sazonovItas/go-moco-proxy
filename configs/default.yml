@@ -1,0 +1,15 @@
+servers:
+  - name: "proxy"
+    listener:
+      host: "127.0.0.1"
+      port: "3030"
+    targets:
+      - host: "127.0.0.1"
+        port: "10000"
+    mirror:
+      - host: "127.0.0.1"
+        port: "10001"
+
+metrics:
+  host: "localhost"
+  port: "8080"
