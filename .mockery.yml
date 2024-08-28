@@ -1,0 +1,6 @@
+with-expecter: true
+outpkg: mocks
+mockname: "{{.InterfaceName}}"
+filename: "{{.MockName}}.go"
+packages:
+  github.com/sazonovItas/go-moco-proxy:

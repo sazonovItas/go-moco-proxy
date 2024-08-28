@@ -4,20 +4,17 @@ project_name: go-moco-proxy
 
 before:
   hooks:
-    - make clean
     - go mod tidy
-    - go generate ./...
-
 
 builds:
-  - env:
+  - id: "moco-proxy" 
+    name: moco-proxy
+    main: ./cmd/moco-proxy/
+    env:
       - CGO_ENABLED=0
-
     goos:
       - linux
       - darwin
-      - windows
-
 
 archives:
   - format: tar.gz
@@ -28,14 +25,6 @@ archives:
       {{- else if eq .Arch "386" }}i386
       {{- else }}{{ .Arch }}{{ end }}
       {{- if .Arm }}v{{ .Arm }}{{ end }}
-    format_overrides:
-      - goos: windows
-        format: zip
-
-
-# TODO: add docker configurations
-# docker:
-
 
 changelog:
   sort: asc
@@ -43,4 +32,4 @@ changelog:
     exclude:
       - "^docs:"
       - "^test:"
-      - "^wip"
+      - "^wip:"

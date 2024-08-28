@@ -3,23 +3,12 @@ package connpool
 import (
 	"context"
 	"fmt"
-	"io"
 	"sync"
 	"time"
 
 	"github.com/jackc/puddle/v2"
 	"golang.org/x/sync/errgroup"
 )
-
-// Dialer is interface for connections establishment.
-type Dialer interface {
-	DialContext(ctx context.Context) (PoolConn, error)
-}
-
-// PoolConn is interface for pool connection.
-type PoolConn interface {
-	io.ReadWriteCloser
-}
 
 const (
 	// defaultMinConns is default minimum count of connections.
@@ -290,13 +279,14 @@ func (p *Pool) checkConnsHealth() bool {
 	totalCounts := p.Stat().TotalConns()
 	resources := p.p.AcquireAllIdle()
 	for _, res := range resources {
-		if p.isExpired(res) && totalCounts > p.minConns {
+		switch {
+		case p.isExpired(res) && totalCounts > p.minConns:
 			healthy = false
 			res.Destroy()
-		} else if p.isIdleExpired(res) && totalCounts > p.minConns {
+		case p.isIdleExpired(res) && totalCounts > p.minConns:
 			healthy = false
 			res.Destroy()
-		} else {
+		default:
 			res.ReleaseUnused()
 		}
 	}

@@ -2,9 +2,7 @@
 #  files  #
 ###########
 
-**/*.md
-**/.git*
-.go**
+**/cov.out
 
 ###############
 # directories #
@@ -14,4 +12,3 @@
 .vscode/
 .idea/
 dist/
-.git/

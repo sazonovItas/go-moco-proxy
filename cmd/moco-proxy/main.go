@@ -18,10 +18,9 @@ var (
 const usage = ``
 
 func main() {
-	srv, err := metrics.New(metrics.MetricConfig{
-		Host: "127.0.0.1",
-		Port: "8080",
-	})
+	logger.Info("Start metric server")
+
+	srv, err := metrics.New(metrics.MetricConfig{})
 	if err != nil {
 		panic(err)
 	}
@@ -42,5 +41,7 @@ func main() {
 
 	<-ctx.Done()
 
-	srv.Shutdown()
+	if err := srv.Shutdown(); err != nil {
+		panic(err)
+	}
 }

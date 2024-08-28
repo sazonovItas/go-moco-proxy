@@ -13,12 +13,13 @@ import (
 // Level is type for logger level.
 type Level uint8
 
-//go:generate stringer -type=Level -linecomment
 const (
 	LevelDebug Level = iota // debug-level
 	LevelInfo               // info-level
 	LevelWarn               // warn-level
 	LevelError              // error-level
+	LevelFatal              // fatal-level
+	LevelPanic              // panic-level
 )
 
 var (

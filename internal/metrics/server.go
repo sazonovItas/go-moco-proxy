@@ -12,15 +12,6 @@ import (
 	"golang.org/x/net/http2"
 )
 
-type metrics struct {
-	server *http.Server
-}
-
-type MetricConfig struct {
-	Host string
-	Port string
-}
-
 const (
 	// readTimeout is read timeout for metric's http server.
 	readTimeout = 5 * time.Second
@@ -30,14 +21,26 @@ const (
 
 	// shutdownTimeout is shutdown timeout for metric's http server.
 	shutdownTimeout = 15 * time.Second
+
+	// metricEndpoint is default endpoint for metrics.
+	metricEndpoint = "/metrics"
 )
 
+type MetricServer struct {
+	server *http.Server
+}
+
+type MetricConfig struct {
+	Host string
+	Port string
+}
+
 // New function creates new metric server with given host config.
-func New(c MetricConfig) (*metrics, error) {
+func New(c MetricConfig) (*MetricServer, error) {
 	const op = "metrics.New"
 
 	handler := http.NewServeMux()
-	handler.Handle("/metrics", promhttp.Handler())
+	handler.Handle(metricEndpoint, promhttp.Handler())
 
 	server := &http.Server{
 		Addr:         net.JoinHostPort(c.Host, c.Port),
@@ -50,13 +53,13 @@ func New(c MetricConfig) (*metrics, error) {
 		return nil, fmt.Errorf("%s: %w", op, err)
 	}
 
-	return &metrics{
+	return &MetricServer{
 		server: server,
 	}, nil
 }
 
 // Run method starts http server and it blocks until http server stops.
-func (m *metrics) Run() error {
+func (m *MetricServer) Run() error {
 	const op = "metrics.Run"
 
 	if err := m.server.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
@@ -67,7 +70,7 @@ func (m *metrics) Run() error {
 }
 
 // Shutdown method stops http server.
-func (m *metrics) Shutdown() error {
+func (m *MetricServer) Shutdown() error {
 	const op = "metrics.Shutdown"
 
 	ctx, cancel := context.WithTimeout(context.Background(), shutdownTimeout)
