@@ -30,9 +30,13 @@ linters:
     - typecheck
     - unconvert
     - unparam
-    # - unused
     - whitespace
     - gofumpt
+
+  exclude_paths:
+    - "vendor"
+    - "*.mock.go" 
+    - "*.gen.go"
 
 run:
  concurrency: 4

@@ -1,89 +1,45 @@
 package logger
 
-import (
-	"context"
-	"fmt"
-	"log/slog"
-	"os"
-	"sync"
+import "go.uber.org/zap"
 
-	"github.com/sazonovItas/go-moco-proxy/pkg/logger/sl"
-)
-
-// Level is type for logger level.
-type Level uint8
-
-const (
-	LevelDebug Level = iota // debug-level
-	LevelInfo               // info-level
-	LevelWarn               // warn-level
-	LevelError              // error-level
-	LevelFatal              // fatal-level
-	LevelPanic              // panic-level
-)
-
-var (
-	log      *slog.Logger
-	logLevel slog.Level = slog.LevelInfo
-
-	logOnce sync.Once
-)
-
-// SetLoggerLevel sets logger level for global logger.
-func SetLoggerLevel(level Level) {
-	logLevel = convertLoggerLevel(level)
+type logger struct {
+	ulogger *zap.Logger
 }
 
-func Log(msg string, level Level, args ...any) {
-	getLogger().Log(context.Background(), convertLoggerLevel(level), msg, args...)
+var _ Logger = (*logger)(nil)
+
+func NewLogger(l *zap.Logger) *logger {
+	return &logger{ulogger: l}
 }
 
-func Debug(msg string, args ...any) {
-	getLogger().Debug(msg, args...)
+func (l *logger) Named(name string) Logger {
+	return NewLogger(l.ulogger.Named(name))
 }
 
-func Info(msg string, args ...any) {
-	getLogger().Info(msg, args...)
+func (l *logger) With(fields ...zap.Field) Logger {
+	return NewLogger(l.ulogger.With(fields...))
 }
 
-func Warn(msg string, args ...any) {
-	getLogger().Warn(msg, args...)
+func (l *logger) Debug(msg string, fields ...zap.Field) {
+	l.ulogger.Debug(msg, fields...)
 }
 
-func Error(msg string, args ...any) {
-	getLogger().Error(msg, args...)
+func (l *logger) Info(msg string, fields ...zap.Field) {
+	l.ulogger.Info(msg, fields...)
 }
 
-func Debugf(msg string, args ...any) {
-	getLogger().Debug(fmt.Sprintf(msg, args...))
+func (l *logger) Warn(msg string, fields ...zap.Field) {
+	l.ulogger.Warn(msg, fields...)
 }
 
-func Infof(msg string, args ...any) {
-	getLogger().Info(fmt.Sprintf(msg, args...))
+func (l *logger) Error(msg string, fields ...zap.Field) {
+	l.ulogger.Error(msg, fields...)
 }
 
-func Warnf(msg string, args ...any) {
-	getLogger().Warn(fmt.Sprintf(msg, args...))
+func (l *logger) Fatal(msg string, fields ...zap.Field) {
+	l.ulogger.Fatal(msg, fields...)
 }
 
-func Errorf(msg string, args ...any) {
-	getLogger().Error(fmt.Sprintf(msg, args...))
-}
-
-// getLogger returns singleton logger.
-func getLogger() *slog.Logger {
-	logOnce.Do(func() {
-		log = sl.NewLogger(logLevel, os.Stdout)
-	})
-
-	return log
-}
-
-// convertLoggerLevel converts logger level to slog.Level.
-func convertLoggerLevel(level Level) slog.Level {
-	if level > LevelError || level < LevelDebug {
-		return slog.LevelDebug
-	}
-
-	return [...]slog.Level{slog.LevelDebug, slog.LevelInfo, slog.LevelWarn, slog.LevelError}[level]
+func (l *logger) Panic(msg string, fields ...zap.Field) {
+	l.ulogger.Panic(msg, fields...)
 }

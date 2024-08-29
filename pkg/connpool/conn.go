@@ -1,6 +1,8 @@
 package connpool
 
 import (
+	"net"
+
 	"github.com/jackc/puddle/v2"
 )
 
@@ -10,8 +12,8 @@ type Conn struct {
 }
 
 // Conn method returns underlying network connection.
-func (c *Conn) Conn() PoolConn {
-	return c.connResource().PoolConn
+func (c *Conn) Conn() net.Conn {
+	return c.connResource().Conn
 }
 
 // Release method returns connection to the pool.
@@ -33,7 +35,7 @@ func (c *Conn) Release() {
 
 // Hijack mthod hijack connection from the pool or panics
 // if connection already released or hijacked.
-func (c *Conn) Hijack() PoolConn {
+func (c *Conn) Hijack() net.Conn {
 	if c.res == nil {
 		panic("cannot hijack already released or hijacked connection")
 	}

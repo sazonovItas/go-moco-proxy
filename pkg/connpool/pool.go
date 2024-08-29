@@ -3,6 +3,7 @@ package connpool
 import (
 	"context"
 	"fmt"
+	"net"
 	"sync"
 	"time"
 
@@ -33,6 +34,11 @@ const (
 	// That timeout is needed because puddle.Pool destroy resource concurrently.
 	timeToDestroy time.Duration = 500 * time.Millisecond
 )
+
+// Dialer is interface for connections establishment.
+type Dialer interface {
+	DialContext(ctx context.Context) (net.Conn, error)
+}
 
 // ConfigPool is config for connection pool.
 type PoolConfig struct {
@@ -101,7 +107,7 @@ func (pc *PoolConfig) validateConfig() error {
 
 // connResource is struct that describes connection resource.
 type connResource struct {
-	PoolConn
+	net.Conn
 }
 
 // Pool is used for connection pooling and using pgx/puddle.Pool like a base pool.

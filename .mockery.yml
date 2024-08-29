@@ -1,6 +1,26 @@
 with-expecter: true
-outpkg: mocks
-mockname: "{{.InterfaceName}}"
-filename: "{{.MockName}}.go"
+recursive: true
+dir: "mocks/{{.PackageName}}"
+filename: "{{- lower .InterfaceName}}.mock.go"
+outpkg: "mock{{.PackageName}}"
+
 packages:
-  github.com/sazonovItas/go-moco-proxy:
+  github.com/sazonovItas/go-moco-proxy/internal/app:
+    config:
+      dir: "internal/app/mock"
+      filename: "{{- lower .InterfaceName}}.mock.go"
+      outpkg: "mock{{.PackageName}}"
+    interfaces:
+      App:
+
+  github.com/sazonovItas/go-moco-proxy/pkg/connpool:
+    interfaces:
+      Dialer:
+
+  github.com/sazonovItas/go-moco-proxy/pkg/logger:
+    interfaces:
+      Logger:
+
+  net:
+    interfaces:
+      Conn:

@@ -4,14 +4,15 @@ OS = linux
 VERSION = latest
 COMMIT =
 DATE = 
-LDFLAGS = "-w -s -X main.version='${VERSION}' -X main.commit='${COMMIT}' -X main.date='${DATE}'"
+LDFLAGS = "-w -s -X 'main.version=${VERSION}' -X 'main.commit=${COMMIT}' -X 'main.date=${DATE}'"
 EXECUTABLE = ./.bin/go-moco
 
-DOCKERFILE = ./deploy/docker/go-moco-proxy.Dockerfile
+DOCKERFILE = ./build/go-moco-proxy.Dockerfile
 CONTAINER_NAME = go-moco-proxy
 IMAGE_NAME = go-moco-proxy
 IMAGE_TAG = ${VERSION}
-DOCKER_COMPOSE_CONFIG=./deploy/docker/config.env
+DOCKER_COMPOSE_FILE=./deploy/docker-compose/docker-compose.yml
+DOCKER_COMPOSE_ENV=./deploy/docker-compose/config.env
 
 .PHONY: run build
 build:
@@ -30,10 +31,10 @@ docker-container:
 
 .PHONY: docker-up docker-down
 docker-up:
-	docker compose --env-file=${DOCKER_COMPOSE_CONFIG} up -d 
+	docker compose --env-file=${DOCKER_COMPOSE_ENV} --project-directory=. -f=${DOCKER_COMPOSE_FILE} up -d
 
 docker-down:
-	docker compose --env-file=${DOCKER_COMPOSE_CONFIG} down 
+	docker compose --env-file=${DOCKER_COMPOSE_ENV} --project-directory=. -f=${DOCKER_COMPOSE_FILE} down
 
 .PHONY: lint test test-race bench coverage
 lint:
@@ -53,9 +54,9 @@ test-race:
 	@go test -v -count=1 ./... -race
 
 coverage:
-	@if [ -f coverage.out ]; then rm coverage.out; fi;
+	@if [ -f cov.out ]; then rm cov.out; fi;
 	@echo "Running unit tests with coverage profile"
-	@go test ./... -coverprofile=coverage.out -covermode=count
+	@go test $$(go list ./... | grep -v "/mocks/") -coverprofile=cov.out -covermode=count 
 	@go tool cover -func=cov.out
 
 .PHONY: clean

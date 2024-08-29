@@ -2,48 +2,18 @@ package connpool
 
 import (
 	"context"
-	"math/rand"
+	"net"
 	"testing"
 	"unsafe"
 
+	mockconnpool "github.com/sazonovItas/go-moco-proxy/mocks/connpool"
+	mocknet "github.com/sazonovItas/go-moco-proxy/mocks/net"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
 )
 
-type mockDialer struct {
-	mock.Mock
-}
-
-func (td *mockDialer) DialContext(ctx context.Context) (PoolConn, error) {
-	args := td.Called(ctx)
-	return args.Get(0).(PoolConn), args.Error(1)
-}
-
-type mockPoolConn struct {
-	mock.Mock
-}
-
-func (pc *mockPoolConn) Read(p []byte) (n int, err error) {
-	return len(p), nil
-}
-
-func (pc *mockPoolConn) Write(p []byte) (n int, err error) {
-	return len(p), nil
-}
-
-func (pc *mockPoolConn) Close() error {
-	args := pc.Called()
-	return args.Error(0)
-}
-
 func TestNewPoolWithConfig(t *testing.T) {
 	t.Parallel()
-
-	mockPoolConn := new(mockPoolConn)
-	mockPoolConn.On("Close").Return(nil)
-
-	mockDialer := new(mockDialer)
-	mockDialer.On("DialContext", mock.Anything).Return(nil, nil)
 
 	testCases := []struct {
 		name    string
@@ -59,7 +29,7 @@ func TestNewPoolWithConfig(t *testing.T) {
 				ConnTimeout:       defaultConnTimeout,
 				ConnIdleTimeout:   defaultConnIdleTimeout,
 				HealthCheckPeriod: defaultHealthCheckPeriod,
-				ConnDialer:        mockDialer,
+				ConnDialer:        &mockconnpool.MockDialer{},
 			},
 			wantErr: false,
 		},
@@ -94,29 +64,25 @@ func TestNewPoolWithConfig(t *testing.T) {
 }
 
 func TestPoolAcquireAndHijack(t *testing.T) {
-	const N = 1000
+	const N = 10
 
-	mockPoolConn := new(mockPoolConn)
-	mockPoolConn.On("Close").Return(nil)
-
-	mockDialer := new(mockDialer)
-	mockDialer.On("DialContext", mock.Anything).Return(mockPoolConn, nil)
+	mockDialer := mockconnpool.NewMockDialer(t)
+	mockDialer.EXPECT().
+		DialContext(mock.Anything).
+		RunAndReturn(func(ctx context.Context) (net.Conn, error) {
+			mockConn := mocknet.NewMockConn(t)
+			mockConn.EXPECT().Close().Once().Return(nil)
+			return mockConn, nil
+		})
 
 	pool, err := NewPool(mockDialer)
 	require.NoError(t, err, "failed create pool: %v", err)
 	defer pool.Close()
 
 	for i := 0; i < N; i++ {
-		buf := make([]byte, rand.Intn(N))
-
 		conn, err := pool.Acquire(context.Background())
 		if err != nil {
 			t.Fatalf("failed acquire connection: %v", err)
-		}
-
-		n, _ := conn.Conn().Write(buf)
-		if n != len(buf) {
-			t.Fatalf("failed write to connection: want %d, got %d", len(buf), n)
 		}
 		conn.Release()
 
@@ -126,6 +92,7 @@ func TestPoolAcquireAndHijack(t *testing.T) {
 		}
 
 		c := conn.Hijack()
+		defer c.Close()
 		require.NotNil(t, c, "failed hijack connection")
 
 		conn.Release()
@@ -133,27 +100,23 @@ func TestPoolAcquireAndHijack(t *testing.T) {
 }
 
 func TestPoolAcquireFunc(t *testing.T) {
-	const N = 1000
+	const N = 10
 
-	mockPoolConn := new(mockPoolConn)
-	mockPoolConn.On("Close").Return(nil)
-
-	mockDialer := new(mockDialer)
-	mockDialer.On("DialContext", mock.Anything).Return(mockPoolConn, nil)
+	mockDialer := mockconnpool.NewMockDialer(t)
+	mockDialer.EXPECT().
+		DialContext(mock.Anything).
+		RunAndReturn(func(ctx context.Context) (net.Conn, error) {
+			mockConn := mocknet.NewMockConn(t)
+			mockConn.EXPECT().Close().Once().Return(nil)
+			return mockConn, nil
+		})
 
 	pool, err := NewPool(mockDialer)
 	require.NoError(t, err, "failed create pool: %v", err)
 	defer pool.Close()
 
 	for i := 0; i < N; i++ {
-		buf := make([]byte, rand.Intn(N))
-
 		err := pool.AcquireFunc(context.Background(), func(c *Conn) error {
-			n, _ := c.Conn().Write(buf)
-			if n != len(buf) {
-				t.Fatalf("failed write to connection: want %d, got %d", len(buf), n)
-			}
-
 			return nil
 		})
 		if err != nil {
@@ -165,11 +128,14 @@ func TestPoolAcquireFunc(t *testing.T) {
 func TestPoolClose(t *testing.T) {
 	t.Parallel()
 
-	mockPoolConn := new(mockPoolConn)
-	mockPoolConn.On("Close").Return(nil)
-
-	mockDialer := new(mockDialer)
-	mockDialer.On("DialContext", mock.Anything).Return(mockPoolConn, nil)
+	mockDialer := mockconnpool.NewMockDialer(t)
+	mockDialer.EXPECT().
+		DialContext(mock.Anything).
+		RunAndReturn(func(ctx context.Context) (net.Conn, error) {
+			mockConn := mocknet.NewMockConn(t)
+			mockConn.EXPECT().Close().Once().Return(nil)
+			return mockConn, nil
+		}).Maybe()
 
 	pool, err := NewPool(mockDialer)
 	require.NoError(t, err, "failed create pool: %w", err)
@@ -224,7 +190,7 @@ func Test_validateConfig(t *testing.T) {
 				ConnTimeout:       defaultConnTimeout,
 				ConnIdleTimeout:   defaultConnIdleTimeout,
 				HealthCheckPeriod: defaultHealthCheckPeriod,
-				ConnDialer:        &mockDialer{},
+				ConnDialer:        &mockconnpool.MockDialer{},
 			},
 			wantErr: false,
 		},

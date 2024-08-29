@@ -24,7 +24,7 @@ services:
 
     volumes:
       - prometheus_data:/prometheus
-      - ./deploy/docker/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./deploy/docker-compose/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
 
     depends_on:
       - moco_proxy

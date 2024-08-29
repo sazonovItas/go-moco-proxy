@@ -1,0 +1,17 @@
+[Unit]
+Description=Moco-Proxy TCP/TLS proxy
+After=syslog.target
+After=network.target
+
+[Service]
+Type=forking
+WorkingDirectory=
+ExecStart=
+TimeoutSec=300
+StandartOutput=inherit
+
+User=root
+Group=root
+
+[Install]
+WantedBy=multi-user.target

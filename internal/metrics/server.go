@@ -35,7 +35,7 @@ type MetricConfig struct {
 	Port string
 }
 
-// New function creates new metric server with given host config.
+// New function creates new metric server with given metric config.
 func New(c MetricConfig) (*MetricServer, error) {
 	const op = "metrics.New"
 

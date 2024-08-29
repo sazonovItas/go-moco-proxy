@@ -2,32 +2,24 @@ package connpool
 
 import (
 	"context"
+	"net"
 	"testing"
 
+	mockconnpool "github.com/sazonovItas/go-moco-proxy/mocks/connpool"
+	mocknet "github.com/sazonovItas/go-moco-proxy/mocks/net"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
 )
 
-type mockBenchDialer struct {
-	mock.Mock
-}
-
-func (td *mockBenchDialer) DialContext(ctx context.Context) (PoolConn, error) {
-	args := td.Called(ctx)
-	return args.Get(0).(PoolConn), args.Error(1)
-}
-
-type benchConn struct {
-	PoolConn
-}
-
-func (tc *benchConn) Close() error {
-	return nil
-}
-
 func BenchmarkAcquireAndRelease(b *testing.B) {
-	mockDialer := new(mockBenchDialer)
-	mockDialer.On("DialContext", mock.Anything).Return(new(benchConn), nil)
+	mockDialer := mockconnpool.NewMockDialer(b)
+	mockDialer.EXPECT().
+		DialContext(mock.Anything).
+		RunAndReturn(func(ctx context.Context) (net.Conn, error) {
+			mockConn := mocknet.NewMockConn(b)
+			mockConn.EXPECT().Close().Once().Return(nil)
+			return mockConn, nil
+		})
 
 	pool, err := NewPool(mockDialer)
 	require.NoError(b, err)
@@ -69,11 +61,16 @@ func BenchmarkAcquireAndReleaseParallel(b *testing.B) {
 		},
 	}
 
-	mockDialer := new(mockBenchDialer)
-	mockDialer.On("DialContext", mock.Anything).Return(new(benchConn), nil)
 	for _, tc := range testCases {
 		b.Run(tc.name, func(b *testing.B) {
-			b.ResetTimer()
+			mockDialer := mockconnpool.NewMockDialer(b)
+			mockDialer.EXPECT().
+				DialContext(mock.Anything).
+				RunAndReturn(func(ctx context.Context) (net.Conn, error) {
+					mockConn := mocknet.NewMockConn(b)
+					mockConn.EXPECT().Close().Once().Return(nil)
+					return mockConn, nil
+				})
 			pool, err := NewPoolWithConfig(&PoolConfig{
 				MinConns:          defaultMinConns,
 				MaxConns:          tc.maxConns,
@@ -86,6 +83,7 @@ func BenchmarkAcquireAndReleaseParallel(b *testing.B) {
 			require.NoError(b, err)
 			defer pool.Close()
 
+			b.ResetTimer()
 			b.RunParallel(func(p *testing.PB) {
 				for p.Next() {
 					conn, err := pool.Acquire(context.Background())
