@@ -89,7 +89,7 @@ func TestConfigureLogger(t *testing.T) {
 		},
 		{
 			name: "configure with development",
-			opts: []LoggerOption{WithDevelopment(true)},
+			opts: []LoggerOption{WithDevelopmentLogs(true)},
 		},
 		{
 			name: "configure with encoding",
@@ -118,7 +118,7 @@ func TestConfigureLogger(t *testing.T) {
 			name: "configure with several options",
 			opts: []LoggerOption{
 				WithLevel(zap.NewAtomicLevelAt(zap.ErrorLevel)),
-				WithDevelopment(true),
+				WithDevelopmentLogs(true),
 				WithEncoding("json"),
 			},
 		},

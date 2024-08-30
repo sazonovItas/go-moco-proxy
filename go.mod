@@ -3,6 +3,7 @@ module github.com/sazonovItas/go-moco-proxy
 go 1.21.0
 
 require (
+	github.com/caarlos0/go-version v0.1.1
 	github.com/fatih/color v1.17.0
 	github.com/jackc/puddle/v2 v2.2.1
 	github.com/knadh/koanf/v2 v2.1.1

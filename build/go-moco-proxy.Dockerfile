@@ -16,7 +16,7 @@ ARG DATE
 RUN --mount=type=cache,target=/go/pkg/mod/ \
   --mount=type=bind,target=. \
   CGO_ENABLED=0 GOARCH=${TARGETARCH} GOOS=${TARGETOS} go build \
-  -ldflags "-s -w -X 'main.Version=${VERSION}' -X 'main.Commit=${COMMIT}' -X 'main.Date=${DATE}'" -o /bin/go-moco ./cmd/moco-proxy/main.go
+  -ldflags "-s -w -X 'main.Version=${VERSION}' -X 'main.Commit=${COMMIT}' -X 'main.Date=${DATE}'" -o /bin/go-moco .
 
 FROM build AS test
 

@@ -27,7 +27,7 @@ func WithLevel(level zap.AtomicLevel) LoggerOptionFunc {
 	}
 }
 
-func WithDevelopment(development bool) LoggerOptionFunc {
+func WithDevelopmentLogs(development bool) LoggerOptionFunc {
 	return func(cfg *zap.Config) {
 		cfg.Development = development
 	}

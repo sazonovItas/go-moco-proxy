@@ -8,13 +8,21 @@ before:
 
 builds:
   - id: "moco-proxy" 
-    name: moco-proxy
-    main: ./cmd/moco-proxy/
+
     env:
       - CGO_ENABLED=0
+
     goos:
       - linux
       - darwin
+
+    ldflags:
+      - >-
+        -X 'main.version={{ .Tag }}'
+        -X 'main.commit={{ .ShortCommit }}'
+        -X 'main.branch={{ .Branch }}'
+        -X 'main.platform={{ .Runtime.Goos }}'
+        -X 'main.date={{ .Date }}'
 
 archives:
   - format: tar.gz

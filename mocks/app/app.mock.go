@@ -25,49 +25,49 @@ func (_m *MockApp) EXPECT() *MockApp_Expecter {
 	return &MockApp_Expecter{mock: &_m.Mock}
 }
 
-// Cli provides a mock function with given fields:
-func (_m *MockApp) Cli() *cli.App {
+// CliCommand provides a mock function with given fields:
+func (_m *MockApp) CliCommand() *cli.Command {
 	ret := _m.Called()
 
 	if len(ret) == 0 {
-		panic("no return value specified for Cli")
+		panic("no return value specified for CliCommand")
 	}
 
-	var r0 *cli.App
-	if rf, ok := ret.Get(0).(func() *cli.App); ok {
+	var r0 *cli.Command
+	if rf, ok := ret.Get(0).(func() *cli.Command); ok {
 		r0 = rf()
 	} else {
 		if ret.Get(0) != nil {
-			r0 = ret.Get(0).(*cli.App)
+			r0 = ret.Get(0).(*cli.Command)
 		}
 	}
 
 	return r0
 }
 
-// MockApp_Cli_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Cli'
-type MockApp_Cli_Call struct {
+// MockApp_CliCommand_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'CliCommand'
+type MockApp_CliCommand_Call struct {
 	*mock.Call
 }
 
-// Cli is a helper method to define mock.On call
-func (_e *MockApp_Expecter) Cli() *MockApp_Cli_Call {
-	return &MockApp_Cli_Call{Call: _e.mock.On("Cli")}
+// CliCommand is a helper method to define mock.On call
+func (_e *MockApp_Expecter) CliCommand() *MockApp_CliCommand_Call {
+	return &MockApp_CliCommand_Call{Call: _e.mock.On("CliCommand")}
 }
 
-func (_c *MockApp_Cli_Call) Run(run func()) *MockApp_Cli_Call {
+func (_c *MockApp_CliCommand_Call) Run(run func()) *MockApp_CliCommand_Call {
 	_c.Call.Run(func(args mock.Arguments) {
 		run()
 	})
 	return _c
 }
 
-func (_c *MockApp_Cli_Call) Return(_a0 *cli.App) *MockApp_Cli_Call {
+func (_c *MockApp_CliCommand_Call) Return(_a0 *cli.Command) *MockApp_CliCommand_Call {
 	_c.Call.Return(_a0)
 	return _c
 }
 
-func (_c *MockApp_Cli_Call) RunAndReturn(run func() *cli.App) *MockApp_Cli_Call {
+func (_c *MockApp_CliCommand_Call) RunAndReturn(run func() *cli.Command) *MockApp_CliCommand_Call {
 	_c.Call.Return(run)
 	return _c
 }
@@ -166,34 +166,34 @@ func (_c *MockApp_Logger_Call) RunAndReturn(run func() logger.Logger) *MockApp_L
 	return _c
 }
 
-// MustRun provides a mock function with given fields:
-func (_m *MockApp) MustRun() {
+// Run provides a mock function with given fields:
+func (_m *MockApp) Run() {
 	_m.Called()
 }
 
-// MockApp_MustRun_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'MustRun'
-type MockApp_MustRun_Call struct {
+// MockApp_Run_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Run'
+type MockApp_Run_Call struct {
 	*mock.Call
 }
 
-// MustRun is a helper method to define mock.On call
-func (_e *MockApp_Expecter) MustRun() *MockApp_MustRun_Call {
-	return &MockApp_MustRun_Call{Call: _e.mock.On("MustRun")}
+// Run is a helper method to define mock.On call
+func (_e *MockApp_Expecter) Run() *MockApp_Run_Call {
+	return &MockApp_Run_Call{Call: _e.mock.On("Run")}
 }
 
-func (_c *MockApp_MustRun_Call) Run(run func()) *MockApp_MustRun_Call {
+func (_c *MockApp_Run_Call) Run(run func()) *MockApp_Run_Call {
 	_c.Call.Run(func(args mock.Arguments) {
 		run()
 	})
 	return _c
 }
 
-func (_c *MockApp_MustRun_Call) Return() *MockApp_MustRun_Call {
+func (_c *MockApp_Run_Call) Return() *MockApp_Run_Call {
 	_c.Call.Return()
 	return _c
 }
 
-func (_c *MockApp_MustRun_Call) RunAndReturn(run func()) *MockApp_MustRun_Call {
+func (_c *MockApp_Run_Call) RunAndReturn(run func()) *MockApp_Run_Call {
 	_c.Call.Return(run)
 	return _c
 }
