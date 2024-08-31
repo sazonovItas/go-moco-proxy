@@ -20,6 +20,7 @@ type LogsConfig struct {
 	Development bool   `yaml:"development"`
 }
 
+//nolint:all
 func (s Spec) readConfig(cliCtx *cli.Context) (cfg Config, err error) {
 	viperCfg := viper.NewWithOptions()
 	viperCfg.SetConfigName("config")

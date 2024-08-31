@@ -3,6 +3,7 @@ package logger
 import "go.uber.org/zap"
 
 type Logger interface {
+	Sync() error
 	Named(name string) Logger
 	With(fields ...zap.Field) Logger
 	Debug(msg string, fields ...zap.Field)

@@ -41,6 +41,7 @@ type app struct {
 	cfg Config
 }
 
+//nolint:all
 func NewApp(spec Spec) *app {
 	a := &app{}
 

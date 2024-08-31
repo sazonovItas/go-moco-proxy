@@ -1,37 +1,47 @@
 package main
 
 import (
-	"context"
-	"os/signal"
-	"syscall"
+	"os"
 
-	vinfo "github.com/sazonovItas/go-moco-proxy/pkg/version"
+	_ "embed"
+
+	goversion "github.com/caarlos0/go-version"
+	cmd "github.com/sazonovItas/go-moco-proxy/cmd/moco-proxy"
 )
 
+//nolint:gochecknoglobals
 var (
-	version  string
-	commit   string
-	branch   string
-	date     string
-	platform string
+	version string
+	commit  string
+	date    string
 )
 
 func main() {
-	_ = vinfo.Info{
-		GitVersion: version,
-		GitCommit:  commit,
-		GitBranch:  branch,
-		BuildDate:  date,
-		Platform:   platform,
-	}
-
-	ctx, cancel := signal.NotifyContext(
-		context.Background(),
-		syscall.SIGINT,
-		syscall.SIGQUIT,
-		syscall.SIGTERM,
+	cmd.Execute(
+		buildVersion(version, commit, date),
+		os.Exit,
+		os.Args[1:],
 	)
-	defer cancel()
+}
 
-	<-ctx.Done()
+func buildVersion(version, commit, date string) goversion.Info {
+	return goversion.GetVersionInfo(
+		goversion.WithAppDetails(
+			"moco-proxy",
+			"Run TCP/TLS proxy",
+			"",
+		),
+		// goversion.WithASCIIName(art),
+		func(i *goversion.Info) {
+			if commit != "" {
+				i.GitCommit = commit
+			}
+			if date != "" {
+				i.BuildDate = date
+			}
+			if version != "" {
+				i.GitVersion = version
+			}
+		},
+	)
 }

@@ -17,7 +17,7 @@ DOCKER_COMPOSE_ENV=./deploy/docker-compose/config.env
 .PHONY: run build
 build:
 	go generate ./...
-	GOOS=${OS} GOARCH=${GOARCH} go build -ldflags ${LDFLAGS} -o ${EXECUTABLE} ./cmd/moco-proxy/
+	GOOS=${OS} GOARCH=${GOARCH} go build -ldflags ${LDFLAGS} -o ${EXECUTABLE} . 
 
 run: build
 	${EXECUTABLE}
@@ -56,7 +56,7 @@ test-race:
 coverage:
 	@if [ -f cov.out ]; then rm cov.out; fi;
 	@echo "Running unit tests with coverage profile"
-	@go test $$(go list ./... | grep -v "/mocks/") -coverprofile=cov.out -covermode=count 
+	@go test $$(go list ./... | grep -ve "/mock.*/") -coverprofile=cov.out -covermode=count 
 	@go tool cover -func=cov.out
 
 .PHONY: clean

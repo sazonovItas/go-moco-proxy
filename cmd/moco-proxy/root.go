@@ -4,13 +4,32 @@ import (
 	goversion "github.com/caarlos0/go-version"
 	"github.com/sazonovItas/go-moco-proxy/pkg/logger"
 	"github.com/spf13/cobra"
+	"go.uber.org/zap"
 )
 
 type rootCmd struct {
-	cmd         *cobra.Command
-	development bool
-	pretty      bool
-	exit        func(int)
+	cmd  *cobra.Command
+	opts rootOpts
+	exit func(int)
+}
+
+type rootOpts struct {
+	debug bool
+}
+
+func Execute(version goversion.Info, exit func(int), args []string) {
+	newRootCmd(version, exit).Execute(args)
+}
+
+func (cmd *rootCmd) Execute(args []string) {
+	cmd.cmd.SetArgs(args)
+
+	if err := cmd.cmd.Execute(); err != nil {
+		l := logger.NewLogger(logger.CreateLogger())
+		l.Error("command failed", zap.Error(err))
+		_ = l.Sync()
+		cmd.exit(1)
+	}
 }
 
 func newRootCmd(version goversion.Info, exit func(int)) *rootCmd {
@@ -19,40 +38,40 @@ func newRootCmd(version goversion.Info, exit func(int)) *rootCmd {
 	}
 
 	cmd := &cobra.Command{
-		Use:               "moco-proxy",
-		Short:             "Run TCP/TLS load balancer proxy with mirroring support",
-		Long:              "Run TCP/TLS load balancer proxy with mirroring support. You can specify metrics server config to see proxy metrics",
+		Use:   "moco-proxy [command]",
+		Short: "Run TCP/TLS load balancer proxy with mirroring support.",
+		Long: `Run TCP/TLS load balancer proxy with mirroring support. 
+You can specify prometheus metrics server for monitoring proxy.`,
 		Version:           version.String(),
 		SilenceUsage:      true,
-		SilenceErrors:     true,
+		SilenceErrors:     false,
 		Args:              cobra.NoArgs,
 		ValidArgsFunction: cobra.NoFileCompletions,
 		PersistentPreRunE: func(_ *cobra.Command, _ []string) (err error) {
-			if root.development {
+			if root.opts.debug {
 				if err = logger.ConfigureLogger(
+					logger.WithDevelopmentLogs(true),
 					logger.WithLevel(logger.ParseLevel("debug")),
-					logger.WithDevelopmentLogs(root.development),
 				); err != nil {
 					return
 				}
 			}
 
-			if root.pretty {
-				if err = logger.ConfigureLogger(); err != nil {
-					return
-				}
+			if err = logger.ConfigureLogger(); err != nil {
+				return
 			}
 
 			return
 		},
 	}
-	cmd.SetVersionTemplate("moco-proxy {{.Version}}")
+	cmd.SetVersionTemplate("{{ .Version }}")
 	cmd.PersistentFlags().
-		BoolVarP(&root.development, "development", "D", false, "Enable debug logs")
-	cmd.PersistentFlags().
-		BoolVarP(&root.development, "pretty", "P", false, "Enable pretty logs")
+		BoolVarP(&root.opts.debug, "debug-logs", "D", false, "Enable debug logs")
 
-	cmd.AddCommand()
+	cmd.AddCommand(
+		newRunCmd().cmd,
+		newServeCmd().cmd,
+	)
 
 	root.cmd = cmd
 	return root

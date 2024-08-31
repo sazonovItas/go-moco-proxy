@@ -310,6 +310,51 @@ func (_c *MockLogger_Panic_Call) RunAndReturn(run func(string, ...zapcore.Field)
 	return _c
 }
 
+// Sync provides a mock function with given fields:
+func (_m *MockLogger) Sync() error {
+	ret := _m.Called()
+
+	if len(ret) == 0 {
+		panic("no return value specified for Sync")
+	}
+
+	var r0 error
+	if rf, ok := ret.Get(0).(func() error); ok {
+		r0 = rf()
+	} else {
+		r0 = ret.Error(0)
+	}
+
+	return r0
+}
+
+// MockLogger_Sync_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Sync'
+type MockLogger_Sync_Call struct {
+	*mock.Call
+}
+
+// Sync is a helper method to define mock.On call
+func (_e *MockLogger_Expecter) Sync() *MockLogger_Sync_Call {
+	return &MockLogger_Sync_Call{Call: _e.mock.On("Sync")}
+}
+
+func (_c *MockLogger_Sync_Call) Run(run func()) *MockLogger_Sync_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		run()
+	})
+	return _c
+}
+
+func (_c *MockLogger_Sync_Call) Return(_a0 error) *MockLogger_Sync_Call {
+	_c.Call.Return(_a0)
+	return _c
+}
+
+func (_c *MockLogger_Sync_Call) RunAndReturn(run func() error) *MockLogger_Sync_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // Warn provides a mock function with given fields: msg, fields
 func (_m *MockLogger) Warn(msg string, fields ...zapcore.Field) {
 	_va := make([]interface{}, len(fields))

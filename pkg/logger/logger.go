@@ -12,6 +12,10 @@ func NewLogger(l *zap.Logger) *logger {
 	return &logger{ulogger: l}
 }
 
+func (l *logger) Sync() error {
+	return l.ulogger.Sync()
+}
+
 func (l *logger) Named(name string) Logger {
 	return NewLogger(l.ulogger.Named(name))
 }

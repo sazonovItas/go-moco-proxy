@@ -6,8 +6,8 @@ import (
 	"testing"
 	"unsafe"
 
-	mockconnpool "github.com/sazonovItas/go-moco-proxy/mocks/connpool"
 	mocknet "github.com/sazonovItas/go-moco-proxy/mocks/net"
+	mockconnpool "github.com/sazonovItas/go-moco-proxy/pkg/connpool/mock/connpool"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
 )

@@ -417,7 +417,8 @@ func (_c *MockConn_Write_Call) RunAndReturn(run func([]byte) (int, error)) *Mock
 func NewMockConn(t interface {
 	mock.TestingT
 	Cleanup(func())
-}) *MockConn {
+},
+) *MockConn {
 	mock := &MockConn{}
 	mock.Mock.Test(t)
 
