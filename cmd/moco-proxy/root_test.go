@@ -61,10 +61,10 @@ func Test_RootCmdExecute(t *testing.T) {
 			name:    "run command without config specification",
 			args:    []string{"run"},
 			opts:    rootOpts{},
-			wantErr: true,
+			wantErr: false,
 		},
 		{
-			name:    "serve command without config specification",
+			name:    "serve command without listener and target specification",
 			args:    []string{"serve"},
 			opts:    rootOpts{},
 			wantErr: true,

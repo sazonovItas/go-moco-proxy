@@ -26,6 +26,8 @@ func newServeCmd() *serveCmd {
 		SilenceErrors:     true,
 		Args:              cobra.NoArgs,
 		ValidArgsFunction: cobra.NoFileCompletions,
+		PersistentPreRun: func(_ *cobra.Command, _ []string) {
+		},
 		Run: func(_ *cobra.Command, _ []string) {
 			// TODO: add serve logic
 		},
@@ -42,7 +44,7 @@ func newServeCmd() *serveCmd {
 	cmd.PersistentFlags().
 		StringVarP(&root.opts.mirror, "mirror", "m", "", "Specify proxy mirror address")
 	cmd.PersistentFlags().
-		StringVar(&root.opts.metric, "metric", "", "Specify proxy metric address")
+		StringVar(&root.opts.metric, "metrics", "", "Specify proxy metric address")
 
 	root.cmd = cmd
 	return root

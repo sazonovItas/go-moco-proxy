@@ -25,9 +25,7 @@ func (cmd *rootCmd) Execute(args []string) {
 	cmd.cmd.SetArgs(args)
 
 	if err := cmd.cmd.Execute(); err != nil {
-		l := logger.NewLogger(logger.CreateLogger())
-		l.Error("command failed", zap.Error(err))
-		_ = l.Sync()
+		logger.Error("command failed", zap.Error(err))
 		cmd.exit(1)
 	}
 }
@@ -55,10 +53,6 @@ You can specify prometheus metrics server for monitoring proxy.`,
 				); err != nil {
 					return
 				}
-			}
-
-			if err = logger.ConfigureLogger(); err != nil {
-				return
 			}
 
 			return

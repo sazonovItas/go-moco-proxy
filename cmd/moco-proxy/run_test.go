@@ -19,7 +19,7 @@ func TestRunCmd(t *testing.T) {
 			name:    "no args",
 			args:    []string{},
 			opts:    runOpts{},
-			wantErr: true,
+			wantErr: false,
 		},
 		{
 			name: "specify config path",

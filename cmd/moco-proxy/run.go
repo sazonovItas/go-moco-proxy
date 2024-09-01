@@ -33,7 +33,6 @@ func newRunCmd() *runCmd {
 		StringVarP(&root.opts.configPath, "config", "c", "", "Specify path to config file")
 	_ = cmd.MarkFlagFilename("config", "yaml", "yml")
 	_ = cmd.MarkFlagRequired("config")
-	cmd.MarkFlagsOneRequired("config")
 
 	root.cmd = cmd
 	return root

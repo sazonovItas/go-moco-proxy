@@ -6,6 +6,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+// TODO: change ip addresses in serve command.
 func TestServeCmd(t *testing.T) {
 	t.Parallel()
 
