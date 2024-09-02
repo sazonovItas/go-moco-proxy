@@ -1,12 +1,14 @@
 package main
 
 import (
+	"fmt"
 	"os"
 
 	_ "embed"
 
 	goversion "github.com/caarlos0/go-version"
 	cmd "github.com/sazonovItas/go-moco-proxy/cmd/moco-proxy"
+	"github.com/sazonovItas/go-moco-proxy/pkg/logger"
 )
 
 //nolint:gochecknoglobals
@@ -17,6 +19,19 @@ var (
 )
 
 func main() {
+	err := logger.ConfigureLogger(
+		logger.WithLevel(logger.ParseLevel("info")),
+		logger.WithEncoding("console"),
+		logger.WithOutputPaths([]string{"stdout"}),
+		logger.WithErrorOutputPaths([]string{"stderr"}),
+	)
+	if err != nil {
+		panic(fmt.Errorf("failed to init configure logger: %w", err))
+	}
+
+	//nolint:errcheck
+	defer logger.Sync()
+
 	cmd.Execute(
 		buildVersion(version, commit, date),
 		os.Exit,
@@ -28,10 +43,9 @@ func buildVersion(version, commit, date string) goversion.Info {
 	return goversion.GetVersionInfo(
 		goversion.WithAppDetails(
 			"moco-proxy",
-			"Run TCP/TLS proxy",
+			"Run TCP/TLS load balancer proxy with mirroring support.",
 			"",
 		),
-		// goversion.WithASCIIName(art),
 		func(i *goversion.Info) {
 			if commit != "" {
 				i.GitCommit = commit

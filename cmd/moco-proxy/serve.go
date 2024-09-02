@@ -1,7 +1,16 @@
 package cmd
 
 import (
+	"github.com/sazonovItas/go-moco-proxy/internal/app"
+	"github.com/sazonovItas/go-moco-proxy/pkg/logger"
 	"github.com/spf13/cobra"
+)
+
+const (
+	listenerFlag = "listener"
+	targetFlag   = "target"
+	mirrorFlag   = "mirror"
+	metricsFlag  = "metrics"
 )
 
 type serveCmd struct {
@@ -26,25 +35,41 @@ func newServeCmd() *serveCmd {
 		SilenceErrors:     true,
 		Args:              cobra.NoArgs,
 		ValidArgsFunction: cobra.NoFileCompletions,
-		PersistentPreRun: func(_ *cobra.Command, _ []string) {
-		},
-		Run: func(_ *cobra.Command, _ []string) {
-			// TODO: add serve logic
+		RunE: func(_ *cobra.Command, _ []string) error {
+			options := root.opts
+
+			cfg, err := generateConfig(
+				options.listener,
+				options.targets,
+				options.mirror,
+				options.metric,
+			)
+			if err != nil {
+				return err
+			}
+
+			application, err := app.NewApp(logger.NewLogger(logger.CreateLogger()), cfg)
+			if err != nil {
+				return err
+			}
+			defer application.Shutdown()
+
+			return application.Run()
 		},
 	}
 
 	cmd.PersistentFlags().
-		StringVarP(&root.opts.listener, "listener", "l", "", "Specify proxy listen address")
-	_ = cmd.MarkFlagRequired("listener")
+		StringVarP(&root.opts.listener, listenerFlag, "l", "", "Specify proxy listen address")
+	_ = cmd.MarkFlagRequired(listenerFlag)
 	cmd.PersistentFlags().
 		StringSliceVarP(&root.opts.targets, "target", "t", nil, "Specify proxy target addresses")
-	_ = cmd.MarkFlagRequired("target")
-	cmd.MarkFlagsRequiredTogether("listener", "target")
-	cmd.MarkFlagsOneRequired("listener", "target")
+	_ = cmd.MarkFlagRequired(targetFlag)
+	cmd.MarkFlagsRequiredTogether(listenerFlag, targetFlag)
+	cmd.MarkFlagsOneRequired(listenerFlag, targetFlag)
 	cmd.PersistentFlags().
-		StringVarP(&root.opts.mirror, "mirror", "m", "", "Specify proxy mirror address")
+		StringVarP(&root.opts.mirror, mirrorFlag, "m", "", "Specify proxy mirror address")
 	cmd.PersistentFlags().
-		StringVar(&root.opts.metric, "metrics", "", "Specify proxy metric address")
+		StringVar(&root.opts.metric, metricsFlag, "", "Specify proxy metric address")
 
 	root.cmd = cmd
 	return root

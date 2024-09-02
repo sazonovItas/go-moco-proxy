@@ -1,6 +1,10 @@
 package cmd
 
 import (
+	"fmt"
+
+	"github.com/sazonovItas/go-moco-proxy/internal/app"
+	"github.com/sazonovItas/go-moco-proxy/pkg/logger"
 	"github.com/spf13/cobra"
 )
 
@@ -24,8 +28,20 @@ func newRunCmd() *runCmd {
 		SilenceErrors:     true,
 		Args:              cobra.NoArgs,
 		ValidArgsFunction: cobra.NoFileCompletions,
-		Run: func(_ *cobra.Command, _ []string) {
-			// TODO: add run logic
+		RunE: func(_ *cobra.Command, _ []string) error {
+			cfg, path, err := loadConfig(root.opts.configPath)
+			if err != nil {
+				return err
+			}
+			logger.Info(fmt.Sprintf("Using %s config file", path))
+
+			application, err := app.NewApp(logger.NewLogger(logger.CreateLogger()), cfg)
+			if err != nil {
+				return err
+			}
+			defer application.Shutdown()
+
+			return application.Run()
 		},
 	}
 

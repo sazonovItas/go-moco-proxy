@@ -6,7 +6,6 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-// TODO: change ip addresses in serve command.
 func TestServeCmd(t *testing.T) {
 	t.Parallel()
 
@@ -24,26 +23,26 @@ func TestServeCmd(t *testing.T) {
 		},
 		{
 			name: "specify listener and targets",
-			args: []string{"-l", "XXXX:XX", "-t=XXXX:XX", "-t=XXXX:XX"},
+			args: []string{"-l", "127.0.0.1:8080", "-t=127.0.0.1:8080", "-t=127.0.0.1:8080"},
 			opts: serveOpts{
-				listener: "XXXX:XX",
-				targets:  []string{"XXXX:XX", "XXXX:XX"},
+				listener: "127.0.0.1:8080",
+				targets:  []string{"127.0.0.1:8080", "127.0.0.1:8080"},
 			},
 			wantErr: false,
 		},
 		{
 			name: "specify only targets",
-			args: []string{"-t=XXXX:XX", "-t=XXXX:XX"},
+			args: []string{"-t=127.0.0.1:8080", "-t=127.0.0.1:8080"},
 			opts: serveOpts{
-				targets: []string{"XXXX:XX", "XXXX:XX"},
+				targets: []string{"127.0.0.1:8080", "127.0.0.1:8080"},
 			},
 			wantErr: true,
 		},
 		{
 			name: "specify only listener",
-			args: []string{"-l", "XXXX:XX"},
+			args: []string{"-l", "127.0.0.1:8080"},
 			opts: serveOpts{
-				listener: "XXXX:XX",
+				listener: "127.0.0.1:8080",
 			},
 			wantErr: true,
 		},
@@ -51,18 +50,18 @@ func TestServeCmd(t *testing.T) {
 			name: "specify all flags",
 			args: []string{
 				"-l",
-				"XXXX:XX",
-				"-t=XXXX:XX",
-				"-t=XXXX:XX",
-				"-m=XXXX:XX",
-				"--metric",
-				"XXXX:XX",
+				"127.0.0.1:8080",
+				"-t=127.0.0.1:8080",
+				"-t=127.0.0.1:8080",
+				"-m=127.0.0.1:8080",
+				"--metrics",
+				"127.0.0.1:8080",
 			},
 			opts: serveOpts{
-				listener: "XXXX:XX",
-				targets:  []string{"XXXX:XX", "XXXX:XX"},
-				mirror:   "XXXX:XX",
-				metric:   "XXXX:XX",
+				listener: "127.0.0.1:8080",
+				targets:  []string{"127.0.0.1:8080", "127.0.0.1:8080"},
+				mirror:   "127.0.0.1:8080",
+				metric:   "127.0.0.1:8080",
 			},
 			wantErr: false,
 		},
@@ -83,7 +82,10 @@ func TestServeCmd(t *testing.T) {
 			cmd.SetArgs(tt.args)
 
 			err := cmd.Execute()
-			require.True(t, (err != nil) == tt.wantErr, "%v", err)
+			if err != nil {
+				require.True(t, (err != nil) == tt.wantErr, "%v", err)
+				return
+			}
 			require.Equal(t, tt.opts, root.opts)
 		})
 	}

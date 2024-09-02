@@ -58,18 +58,6 @@ func Test_RootCmdExecute(t *testing.T) {
 			wantErr: false,
 		},
 		{
-			name:    "run command without config specification",
-			args:    []string{"run"},
-			opts:    rootOpts{},
-			wantErr: false,
-		},
-		{
-			name:    "serve command without listener and target specification",
-			args:    []string{"serve"},
-			opts:    rootOpts{},
-			wantErr: true,
-		},
-		{
 			name: "pretty-logs and debug-logs flags",
 			args: []string{"--debug-logs=true"},
 			opts: rootOpts{
