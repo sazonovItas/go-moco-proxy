@@ -28,7 +28,6 @@ func main() {
 	if err != nil {
 		panic(fmt.Errorf("failed to init configure logger: %w", err))
 	}
-
 	//nolint:errcheck
 	defer logger.Sync()
 

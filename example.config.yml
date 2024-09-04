@@ -1,0 +1,32 @@
+servers:
+  - name: "server1"
+    listener:
+      address: "127.0.0.1:8080"
+      tls:
+        cert: "cert.cert"
+        key: "key.key"
+
+    targets:
+      - address: "127.0.0.1:10001"
+      - address: "127.0.0.1:10002"
+      - address: "127.0.0.1:10003"
+        tls:
+          ca_cert: "ca_cert.pem"
+          mode: "mutual"
+
+  - name: "server2"
+    listener:
+      address: "127.0.0.1:9090"
+  
+    targets:
+      - address: "127.0.0.1:11001"
+      - address: "127.0.0.1:11002"
+
+    mirror:
+      address: "127.0.0.1:3030"
+      tls:
+        mode: "simple"
+
+metrics:
+  address: "127.0.0.1:4040"
+  endpoint: "metrics"

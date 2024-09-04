@@ -1,14 +1,10 @@
 version: 2
 
-project_name: go-moco-proxy
-
 before:
   hooks:
     - go mod tidy
 
 builds:
-  - id: "moco-proxy" 
-
     env:
       - CGO_ENABLED=0
 
@@ -19,9 +15,7 @@ builds:
     ldflags:
       - >-
         -X 'main.version={{ .Tag }}'
-        -X 'main.commit={{ .ShortCommit }}'
-        -X 'main.branch={{ .Branch }}'
-        -X 'main.platform={{ .Runtime.Goos }}'
+        -X 'main.commit={{ .Commit }}'
         -X 'main.date={{ .Date }}'
 
 archives:

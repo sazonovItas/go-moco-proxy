@@ -3,7 +3,7 @@ package app
 import (
 	"context"
 
-	"github.com/sazonovItas/go-moco-proxy/internal/config"
+	"github.com/sazonovItas/go-moco-proxy/pkg/config"
 	"github.com/sazonovItas/go-moco-proxy/pkg/logger"
 	"github.com/urfave/cli/v2"
 )

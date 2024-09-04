@@ -6,17 +6,13 @@ jobs:
     name: Test
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        go-version: [ 1.21, 1.22, 1.23 ]
-
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Go1.x
+      - name: Set up Go1.22
         uses: actions/setup-go@v2
         with:
-          go-version: ${{ matrix.go-version }}
+          go-version: 1.22
 
       - name: Install dependencies and generate code
         run: |

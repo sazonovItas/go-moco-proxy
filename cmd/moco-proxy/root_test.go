@@ -46,19 +46,19 @@ func Test_RootCmdExecute(t *testing.T) {
 		wantErr bool
 	}{
 		{
-			name:    "no args",
+			name:    "Test no args",
 			args:    []string{},
 			opts:    rootOpts{},
 			wantErr: false,
 		},
 		{
-			name:    "help flag -h",
+			name:    "Test help flag -h",
 			args:    []string{"-h"},
 			opts:    rootOpts{},
 			wantErr: false,
 		},
 		{
-			name: "pretty-logs and debug-logs flags",
+			name: "Test pretty-logs and debug-logs flags",
 			args: []string{"--debug-logs=true"},
 			opts: rootOpts{
 				debug: true,
@@ -66,7 +66,7 @@ func Test_RootCmdExecute(t *testing.T) {
 			wantErr: false,
 		},
 		{
-			name: "pretty-logs and debug-logs flags in short form",
+			name: "Test pretty-logs and debug-logs flags in short form",
 			args: []string{"-D"},
 			opts: rootOpts{
 				debug: true,
@@ -74,7 +74,7 @@ func Test_RootCmdExecute(t *testing.T) {
 			wantErr: false,
 		},
 		{
-			name:    "unknown flag",
+			name:    "Test unknown flag",
 			args:    []string{"-P"},
 			opts:    rootOpts{},
 			wantErr: true,

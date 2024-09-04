@@ -44,19 +44,19 @@ func BenchmarkAcquireAndReleaseParallel(b *testing.B) {
 		maxConns int32
 	}{
 		{
-			name:     "pool with 4 maximum connections",
+			name:     "Test pool with 4 maximum connections",
 			maxConns: 4,
 		},
 		{
-			name:     "pool with 8 maximum connections",
+			name:     "Test pool with 8 maximum connections",
 			maxConns: 8,
 		},
 		{
-			name:     "pool with 16 maximum connections",
+			name:     "Test pool with 16 maximum connections",
 			maxConns: 16,
 		},
 		{
-			name:     "pool with 32 maximum connections",
+			name:     "Test pool with 32 maximum connections",
 			maxConns: 32,
 		},
 	}

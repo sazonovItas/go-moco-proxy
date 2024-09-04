@@ -21,7 +21,7 @@ func TestNewPoolWithConfig(t *testing.T) {
 		wantErr bool
 	}{
 		{
-			name: "valid config",
+			name: "Test valid config",
 			cfg: &PoolConfig{
 				MinConns:          defaultMinConns,
 				MaxConns:          defaultMaxConns,
@@ -34,12 +34,12 @@ func TestNewPoolWithConfig(t *testing.T) {
 			wantErr: false,
 		},
 		{
-			name:    "config dialer nil value",
+			name:    "Test config dialer nil value",
 			cfg:     defaultConfig(),
 			wantErr: true,
 		},
 		{
-			name:    "empty config",
+			name:    "Test empty config",
 			cfg:     &PoolConfig{},
 			wantErr: true,
 		},
@@ -182,7 +182,7 @@ func Test_validateConfig(t *testing.T) {
 		wantErr bool
 	}{
 		{
-			name: "valid config",
+			name: "Test valid config",
 			cfg: &PoolConfig{
 				MinConns:          defaultMinConns,
 				MaxConns:          defaultMaxConns,
@@ -195,12 +195,12 @@ func Test_validateConfig(t *testing.T) {
 			wantErr: false,
 		},
 		{
-			name:    "config dialer nil value",
+			name:    "Test config dialer nil value",
 			cfg:     defaultConfig(),
 			wantErr: true,
 		},
 		{
-			name:    "empty config",
+			name:    "Test empty config",
 			cfg:     &PoolConfig{},
 			wantErr: true,
 		},

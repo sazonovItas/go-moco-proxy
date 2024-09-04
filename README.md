@@ -4,5 +4,6 @@ Moco-proxy is simple TCP & TLS proxy with load balancing and traffic mirroring s
 
 ## TODO
 
-- [ ] load balance dialer for connection pooler
-- [ ] tls dialer for connection pooler
+- [ ] add image to docker hub
+- [ ] add helm release
+

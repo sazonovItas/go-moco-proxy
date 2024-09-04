@@ -22,7 +22,7 @@ type serveOpts struct {
 	listener string
 	targets  []string
 	mirror   string
-	metric   string
+	metrics  string
 }
 
 func newServeCmd() *serveCmd {
@@ -42,7 +42,7 @@ func newServeCmd() *serveCmd {
 				options.listener,
 				options.targets,
 				options.mirror,
-				options.metric,
+				options.metrics,
 			)
 			if err != nil {
 				return err
@@ -69,7 +69,7 @@ func newServeCmd() *serveCmd {
 	cmd.PersistentFlags().
 		StringVarP(&root.opts.mirror, mirrorFlag, "m", "", "Specify proxy mirror address")
 	cmd.PersistentFlags().
-		StringVar(&root.opts.metric, metricsFlag, "", "Specify proxy metric address")
+		StringVar(&root.opts.metrics, metricsFlag, "", "Specify proxy metric address")
 
 	root.cmd = cmd
 	return root

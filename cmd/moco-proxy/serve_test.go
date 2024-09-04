@@ -16,13 +16,13 @@ func TestServeCmd(t *testing.T) {
 		wantErr bool
 	}{
 		{
-			name:    "no args",
+			name:    "Test no args",
 			args:    []string{},
 			opts:    serveOpts{},
 			wantErr: true,
 		},
 		{
-			name: "specify listener and targets",
+			name: "Test specify listener and targets",
 			args: []string{"-l", "127.0.0.1:8080", "-t=127.0.0.1:8080", "-t=127.0.0.1:8080"},
 			opts: serveOpts{
 				listener: "127.0.0.1:8080",
@@ -31,7 +31,7 @@ func TestServeCmd(t *testing.T) {
 			wantErr: false,
 		},
 		{
-			name: "specify only targets",
+			name: "Test specify only targets",
 			args: []string{"-t=127.0.0.1:8080", "-t=127.0.0.1:8080"},
 			opts: serveOpts{
 				targets: []string{"127.0.0.1:8080", "127.0.0.1:8080"},
@@ -39,7 +39,7 @@ func TestServeCmd(t *testing.T) {
 			wantErr: true,
 		},
 		{
-			name: "specify only listener",
+			name: "Test specify only listener",
 			args: []string{"-l", "127.0.0.1:8080"},
 			opts: serveOpts{
 				listener: "127.0.0.1:8080",
@@ -47,7 +47,7 @@ func TestServeCmd(t *testing.T) {
 			wantErr: true,
 		},
 		{
-			name: "specify all flags",
+			name: "Test specify all flags",
 			args: []string{
 				"-l",
 				"127.0.0.1:8080",
@@ -61,12 +61,12 @@ func TestServeCmd(t *testing.T) {
 				listener: "127.0.0.1:8080",
 				targets:  []string{"127.0.0.1:8080", "127.0.0.1:8080"},
 				mirror:   "127.0.0.1:8080",
-				metric:   "127.0.0.1:8080",
+				metrics:  "127.0.0.1:8080",
 			},
 			wantErr: false,
 		},
 		{
-			name: "unknown flag",
+			name: "Test unknown flag",
 			args: []string{
 				"--xxxxx",
 			},

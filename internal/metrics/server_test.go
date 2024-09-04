@@ -4,19 +4,19 @@ import (
 	"testing"
 	"time"
 
+	"github.com/sazonovItas/go-moco-proxy/pkg/config"
 	"github.com/stretchr/testify/require"
 )
 
 func TestNew(t *testing.T) {
 	testCases := []struct {
 		name         string
-		cfg          MetricConfig
+		cfg          config.MetricConfig
 		expectedAddr string
 	}{{
 		name: "valid metric's configuration",
-		cfg: MetricConfig{
-			Host: "localhost",
-			Port: "8080",
+		cfg: config.MetricConfig{
+			Address: "localhost:8080",
 		},
 		expectedAddr: "localhost:8080",
 	}}
@@ -42,24 +42,22 @@ func TestRunAndShutdown(t *testing.T) {
 
 	testCases := []struct {
 		name            string
-		cfg             MetricConfig
+		cfg             config.MetricConfig
 		wantRunErr      bool
 		wantShutdownErr bool
 	}{
 		{
 			name: "valid metric's server run",
-			cfg: MetricConfig{
-				Host: "127.0.0.1",
-				Port: "8080",
+			cfg: config.MetricConfig{
+				Address: "127.0.0.1:8080",
 			},
 			wantRunErr:      false,
 			wantShutdownErr: false,
 		},
 		{
 			name: "invalid metric's configuration",
-			cfg: MetricConfig{
-				Host: "_kHiohelh_",
-				Port: "8080",
+			cfg: config.MetricConfig{
+				Address: "_kHiohelh_:8080",
 			},
 			wantRunErr:      true,
 			wantShutdownErr: false,
@@ -97,7 +95,7 @@ func TestRunAndShutdown(t *testing.T) {
 }
 
 func TestShutdownOnNotRunningServer(t *testing.T) {
-	m, err := New(MetricConfig{Host: "", Port: ""})
+	m, err := New(config.MetricConfig{})
 	err = m.Shutdown()
 	require.NoError(t, err, "shouldn't be error to shutdown not running serrver")
 }

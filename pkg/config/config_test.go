@@ -11,22 +11,22 @@ func TestTLSConfig_IsSimple(t *testing.T) {
 		want bool
 	}{
 		{
-			name: "simple tls mode",
+			name: "Test simple tls mode",
 			mode: SimpleTLSMode,
 			want: true,
 		},
 		{
-			name: "insecure tls mode",
+			name: "Test insecure tls mode",
 			mode: InsecureTLSMode,
 			want: false,
 		},
 		{
-			name: "mutual tls mode",
+			name: "Test mutual tls mode",
 			mode: MutualTLSMode,
 			want: false,
 		},
 		{
-			name: "unknown tls mode",
+			name: "Test unknown tls mode",
 			mode: "unknown",
 			want: false,
 		},
@@ -50,22 +50,22 @@ func TestTLSConfig_IsInsecure(t *testing.T) {
 		want bool
 	}{
 		{
-			name: "simple tls mode",
+			name: "Test simple tls mode",
 			mode: SimpleTLSMode,
 			want: false,
 		},
 		{
-			name: "insecure tls mode",
+			name: "Test insecure tls mode",
 			mode: InsecureTLSMode,
 			want: true,
 		},
 		{
-			name: "mutual tls mode",
+			name: "Test mutual tls mode",
 			mode: MutualTLSMode,
 			want: false,
 		},
 		{
-			name: "unknown tls mode",
+			name: "Test unknown tls mode",
 			mode: "unknown",
 			want: false,
 		},
@@ -89,22 +89,22 @@ func TestTLSConfig_IsMutual(t *testing.T) {
 		want bool
 	}{
 		{
-			name: "simple tls mode",
+			name: "Test simple tls mode",
 			mode: SimpleTLSMode,
 			want: false,
 		},
 		{
-			name: "insecure tls mode",
+			name: "Test insecure tls mode",
 			mode: InsecureTLSMode,
 			want: false,
 		},
 		{
-			name: "mutual tls mode",
+			name: "Test mutual tls mode",
 			mode: MutualTLSMode,
 			want: true,
 		},
 		{
-			name: "unknown tls mode",
+			name: "Test unknown tls mode",
 			mode: "unknown",
 			want: false,
 		},

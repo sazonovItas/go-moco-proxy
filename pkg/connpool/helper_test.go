@@ -15,25 +15,25 @@ func Test_isExpiredTimeout(t *testing.T) {
 		want     bool
 	}{
 		{
-			name:     "timeout is expired",
+			name:     "Test timeout is expired",
 			pastTime: time.Second * 7,
 			timeout:  time.Second * 5,
 			want:     true,
 		},
 		{
-			name:     "timeout is not expired",
+			name:     "Test timeout is not expired",
 			pastTime: time.Second * 3,
 			timeout:  time.Second * 5,
 			want:     false,
 		},
 		{
-			name:     "timeout and past time is equal",
+			name:     "Test timeout and past time is equal",
 			pastTime: time.Second * 5,
 			timeout:  time.Second * 5,
 			want:     false,
 		},
 		{
-			name:     "timeout is null",
+			name:     "Test timeout is null",
 			pastTime: time.Second,
 			timeout:  0,
 			want:     true,

@@ -4,11 +4,11 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"net"
 	"net/http"
 	"time"
 
 	"github.com/prometheus/client_golang/prometheus/promhttp"
+	"github.com/sazonovItas/go-moco-proxy/pkg/config"
 	"golang.org/x/net/http2"
 )
 
@@ -30,20 +30,19 @@ type MetricServer struct {
 	server *http.Server
 }
 
-type MetricConfig struct {
-	Host string
-	Port string
-}
-
 // New function creates new metric server with given metric config.
-func New(c MetricConfig) (*MetricServer, error) {
+func New(c config.MetricConfig) (*MetricServer, error) {
 	const op = "metrics.New"
 
+	if c.Endpoint == "" {
+		c.Endpoint = metricEndpoint
+	}
+
 	handler := http.NewServeMux()
-	handler.Handle(metricEndpoint, promhttp.Handler())
+	handler.Handle(c.Endpoint, promhttp.Handler())
 
 	server := &http.Server{
-		Addr:         net.JoinHostPort(c.Host, c.Port),
+		Addr:         c.Address,
 		Handler:      handler,
 		ReadTimeout:  readTimeout,
 		WriteTimeout: writeTimeout,

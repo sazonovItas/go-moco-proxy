@@ -6,7 +6,7 @@ import (
 	"io/fs"
 	"strings"
 
-	"github.com/sazonovItas/go-moco-proxy/internal/config"
+	"github.com/sazonovItas/go-moco-proxy/pkg/config"
 )
 
 // loadConfig loads config from configPath or other default paths
@@ -46,7 +46,7 @@ func loadConfig(configPath string) (cfg *config.Config, used string, err error) 
 	return nil, "", fmt.Errorf("failed to load config from default paths")
 }
 
-// generateConfig generates config by given listener, targets, mirror and metric.
+// generateConfig generates config by given listener, targets, mirror and metrics.
 func generateConfig(
 	listener string,
 	targets []string,
@@ -90,22 +90,19 @@ func generateConfig(
 			return nil, err
 		}
 
-		cfg.Metrics = m
+		cfg.Metrics = config.MetricConfig{Address: m.Address}
 	}
 
 	return cfg, nil
 }
 
 func parseHostConfigFromAddr(addr string) (config.HostConfig, error) {
-	h, err := parseAddr(addr)
+	_, err := parseAddr(addr)
 	if err != nil {
 		return config.HostConfig{}, err
 	}
 
-	return config.HostConfig{
-		Host: h[0],
-		Port: h[1],
-	}, nil
+	return config.HostConfig{Address: addr}, nil
 }
 
 func parseAddr(addr string) (hostPort []string, err error) {
