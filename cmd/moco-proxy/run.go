@@ -35,7 +35,7 @@ func newRunCmd() *runCmd {
 			}
 			logger.Info(fmt.Sprintf("Using %s config file", path))
 
-			application, err := app.NewApp(logger.NewLogger(logger.CreateLogger()), cfg)
+			application, err := app.NewApp(cfg)
 			if err != nil {
 				return err
 			}

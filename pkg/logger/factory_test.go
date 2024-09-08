@@ -111,6 +111,10 @@ func TestConfigureLogger(t *testing.T) {
 			opts: []LoggerOption{WithErrorOutputPaths([]string{"stderr"})},
 		},
 		{
+			name: "configure with pretty console encoding",
+			opts: []LoggerOption{WithPrettyConsoleEncoding()},
+		},
+		{
 			name: "configure with error ouput paths",
 			opts: []LoggerOption{WithEncoderConfig(zap.NewDevelopmentConfig().EncoderConfig)},
 		},

@@ -6,23 +6,11 @@ outpkg: "mock{{.PackageName}}"
 dir: "mocks/{{.PackageName}}"
 
 packages:
-  github.com/sazonovItas/go-moco-proxy/internal/app:
-    config:
-      dir: "internal/app/mock/{{.PackageName}}"
-    interfaces:
-      App:
-
   github.com/sazonovItas/go-moco-proxy/pkg/connpool:
     config:
       dir: "pkg/connpool/mock/{{.PackageName}}"
     interfaces:
       Dialer:
-
-  github.com/sazonovItas/go-moco-proxy/pkg/logger:
-    config:
-      dir: "pkg/logger/mock/{{.PackageName}}"
-    interfaces:
-      Logger:
 
   net:
     interfaces:

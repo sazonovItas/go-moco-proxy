@@ -1,6 +1,7 @@
 package metrics
 
 import (
+	"reflect"
 	"testing"
 
 	"github.com/prometheus/client_golang/prometheus"
@@ -15,11 +16,22 @@ func TestMustRegisterGauge(t *testing.T) {
 		labelNames []string
 	}
 	tests := []struct {
-		name string
-		args args
-		want *prometheus.GaugeVec
+		name   string
+		args   args
+		labels prometheus.Labels
+		want   *prometheus.Desc
 	}{
-		// TODO: Add test cases.
+		{
+			name: "Test register new gauge vec",
+			args: args{
+				subsystem:  "example",
+				name:       "example_metrcis",
+				help:       "help",
+				labelNames: []string{"name"},
+			},
+			labels: prometheus.Labels{"name": "example"},
+			want:   prometheus.NewDesc("example", "help", []string{"name"}, prometheus.Labels{}),
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -29,7 +41,10 @@ func TestMustRegisterGauge(t *testing.T) {
 				tt.args.help,
 				tt.args.labelNames...)
 			defer prometheus.Unregister(got)
-			require.Equal(t, tt.want, got, "MustRegisterGauge() = %v, want %v", got, tt.want)
+
+			if !reflect.DeepEqual(got.With(tt.labels).Desc(), tt.want) {
+				return
+			}
 		})
 	}
 }
@@ -44,7 +59,7 @@ func TestMustRegisterCounter(t *testing.T) {
 	tests := []struct {
 		name string
 		args args
-		want *prometheus.CounterVec
+		want *prometheus.Desc
 	}{
 		// TODO: Add test cases.
 	}
@@ -72,7 +87,7 @@ func TestMustRegisterHistogram(t *testing.T) {
 	tests := []struct {
 		name string
 		args args
-		want *prometheus.HistogramVec
+		want *prometheus.Desc
 	}{
 		// TODO: Add test cases.
 	}

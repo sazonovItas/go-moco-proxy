@@ -1,49 +1,21 @@
 package logger
 
-import "go.uber.org/zap"
+import (
+	"context"
 
-type logger struct {
-	ulogger *zap.Logger
+	"go.uber.org/zap"
+)
+
+type ctxKey struct{}
+
+func ToContext(ctx context.Context, logger *zap.Logger) context.Context {
+	return context.WithValue(ctx, ctxKey{}, logger)
 }
 
-var _ Logger = (*logger)(nil)
+func FromContext(ctx context.Context) *zap.Logger {
+	if logger, ok := ctx.Value(ctxKey{}).(*zap.Logger); ok {
+		return logger
+	}
 
-func NewLogger(l *zap.Logger) *logger {
-	return &logger{ulogger: l}
-}
-
-func (l *logger) Sync() error {
-	return l.ulogger.Sync()
-}
-
-func (l *logger) Named(name string) Logger {
-	return NewLogger(l.ulogger.Named(name))
-}
-
-func (l *logger) With(fields ...zap.Field) Logger {
-	return NewLogger(l.ulogger.With(fields...))
-}
-
-func (l *logger) Debug(msg string, fields ...zap.Field) {
-	l.ulogger.Debug(msg, fields...)
-}
-
-func (l *logger) Info(msg string, fields ...zap.Field) {
-	l.ulogger.Info(msg, fields...)
-}
-
-func (l *logger) Warn(msg string, fields ...zap.Field) {
-	l.ulogger.Warn(msg, fields...)
-}
-
-func (l *logger) Error(msg string, fields ...zap.Field) {
-	l.ulogger.Error(msg, fields...)
-}
-
-func (l *logger) Fatal(msg string, fields ...zap.Field) {
-	l.ulogger.Fatal(msg, fields...)
-}
-
-func (l *logger) Panic(msg string, fields ...zap.Field) {
-	l.ulogger.Panic(msg, fields...)
+	return getLogger()
 }

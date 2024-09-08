@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"os"
 
-	_ "embed"
-
 	goversion "github.com/caarlos0/go-version"
 	cmd "github.com/sazonovItas/go-moco-proxy/cmd/moco-proxy"
 	"github.com/sazonovItas/go-moco-proxy/pkg/logger"
@@ -21,9 +19,9 @@ var (
 func main() {
 	err := logger.ConfigureLogger(
 		logger.WithLevel(logger.ParseLevel("info")),
-		logger.WithEncoding("console"),
 		logger.WithOutputPaths([]string{"stdout"}),
 		logger.WithErrorOutputPaths([]string{"stderr"}),
+		logger.WithPrettyConsoleEncoding(),
 	)
 	if err != nil {
 		panic(fmt.Errorf("failed to init configure logger: %w", err))

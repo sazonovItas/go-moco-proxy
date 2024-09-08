@@ -2,7 +2,9 @@ package logger
 
 import (
 	"strings"
+	"time"
 
+	prettyconsole "github.com/thessem/zap-prettyconsole"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 )
@@ -62,6 +64,16 @@ func WithErrorOutputPaths(paths []string) LoggerOptionFunc {
 func WithEncoderConfig(encoder zapcore.EncoderConfig) LoggerOptionFunc {
 	return func(cfg *zap.Config) {
 		cfg.EncoderConfig = encoder
+	}
+}
+
+func WithPrettyConsoleEncoding() LoggerOptionFunc {
+	encoderCfg := prettyconsole.NewEncoderConfig()
+	encoderCfg.EncodeTime = prettyconsole.DefaultTimeEncoder(time.RFC3339)
+
+	return func(cfg *zap.Config) {
+		cfg.Encoding = "pretty_console"
+		cfg.EncoderConfig = encoderCfg
 	}
 }
 

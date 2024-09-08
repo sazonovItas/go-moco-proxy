@@ -7,6 +7,8 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/collectors"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/sazonovItas/go-moco-proxy/pkg/config"
 	"golang.org/x/net/http2"
@@ -39,6 +41,7 @@ func New(c config.MetricConfig) (*MetricServer, error) {
 	}
 
 	handler := http.NewServeMux()
+	prometheus.Unregister(collectors.NewGoCollector())
 	handler.Handle(c.Endpoint, promhttp.Handler())
 
 	server := &http.Server{

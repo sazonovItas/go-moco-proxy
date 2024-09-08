@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"github.com/sazonovItas/go-moco-proxy/internal/app"
-	"github.com/sazonovItas/go-moco-proxy/pkg/logger"
 	"github.com/spf13/cobra"
 )
 
@@ -48,7 +47,7 @@ func newServeCmd() *serveCmd {
 				return err
 			}
 
-			application, err := app.NewApp(logger.NewLogger(logger.CreateLogger()), cfg)
+			application, err := app.NewApp(cfg)
 			if err != nil {
 				return err
 			}
