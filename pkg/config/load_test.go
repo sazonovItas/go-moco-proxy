@@ -32,12 +32,19 @@ func TestLoad(t *testing.T) {
 						},
 						Targets: []HostConfig{
 							{Address: "127.0.0.1:10001"},
-							{Address: "127.0.0.1:10002"},
+							{
+								Address: "127.0.0.1:10002",
+								TLSConfig: TLSConfig{
+									CaCert: "ca_cert.pem",
+									Cert:   "cert.pem",
+									Key:    "key.pem",
+									Mode:   "mutual",
+								},
+							},
 							{
 								Address: "127.0.0.1:10003",
 								TLSConfig: TLSConfig{
 									CaCert: "ca_cert.pem",
-									Mode:   "mutual",
 								},
 							},
 						},
@@ -52,14 +59,15 @@ func TestLoad(t *testing.T) {
 						Mirror: HostConfig{
 							Address: "127.0.0.1:3030",
 							TLSConfig: TLSConfig{
-								Mode: "simple",
+								CaCert: "ca_cert.pem",
+								SNI:    "mirror",
 							},
 						},
 					},
 				},
 				Metrics: MetricConfig{
 					Address:  "127.0.0.1:4040",
-					Endpoint: "metrics",
+					Endpoint: "/metrics",
 				},
 			},
 			wantErr: false,

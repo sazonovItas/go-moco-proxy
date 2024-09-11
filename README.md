@@ -7,6 +7,6 @@ Moco-proxy is simple TCP & TLS proxy with load balancing and traffic mirroring s
 - [ ] add image to docker hub
 - [ ] add connections pooling for proxy targets
 - [ ] change config:
-    - [ ] handle host configs like a array
+    - [ ] handle host configs like an array
     - [ ] add connection pooling for targets like a option
 

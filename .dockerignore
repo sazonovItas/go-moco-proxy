@@ -2,9 +2,16 @@
 #  files  #
 ###########
 
+*.md
 **/*.md
+
+.git*
 **/.git*
-.go**
+
+*.yml
+
+Makefile 
+cov.out
 
 ###############
 # directories #
@@ -14,5 +21,8 @@
 .vscode/
 .idea/
 dist/
-.git**
-.forgeo**
+
+scripts/
+tests/
+mocks/
+deploy/

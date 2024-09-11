@@ -9,10 +9,15 @@ servers:
     targets:
       - address: "127.0.0.1:10001"
       - address: "127.0.0.1:10002"
+        tls:
+          ca_cert: "ca_cert.pem"
+          cert: "cert.pem"
+          key: "key.pem"
+          mode: "mutual"
+
       - address: "127.0.0.1:10003"
         tls:
           ca_cert: "ca_cert.pem"
-          mode: "mutual"
 
   - name: "server2"
     listener:
@@ -25,8 +30,8 @@ servers:
     mirror:
       address: "127.0.0.1:3030"
       tls:
-        mode: "simple"
+        ca_cert: "ca_cert.pem"
 
 metrics:
   address: "127.0.0.1:4040"
-  endpoint: "metrics"
+  endpoint: "/metrics"

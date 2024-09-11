@@ -1,9 +1,8 @@
 package config
 
 const (
-	SimpleTLSMode   = "simple"
-	InsecureTLSMode = "insecure"
-	MutualTLSMode   = "mutual"
+	SimpleTLSMode = "simple"
+	MutualTLSMode = "mutual"
 )
 
 type Config struct {
@@ -23,25 +22,22 @@ type HostConfig struct {
 	TLSConfig `       yaml:"tls"     koanf:"tls"`
 }
 
-type TLSConfig struct {
-	CaCert string `yaml:"ca_cert" koanf:"ca_cert"`
-	Cert   string `yaml:"cert"    koanf:"cert"`
-	Key    string `yaml:"key"     koanf:"key"`
-	Mode   string `yaml:"mode"    koanf:"mode"`
-}
-
 type MetricConfig struct {
 	Address   string `yaml:"address"  koanf:"address"`
 	Endpoint  string `yaml:"endpoint" koanf:"endpoint"`
 	TLSConfig `       yaml:"tls"      koanf:"tls"`
 }
 
-func (t TLSConfig) IsSimple() bool {
-	return t.Mode == SimpleTLSMode
+type TLSConfig struct {
+	CaCert string `yaml:"ca_cert" koanf:"ca_cert"`
+	Cert   string `yaml:"cert"    koanf:"cert"`
+	Key    string `yaml:"key"     koanf:"key"`
+	SNI    string `yaml:"sni"     koanf:"sni"`
+	Mode   string `yaml:"mode"    koanf:"mode"`
 }
 
-func (t TLSConfig) IsInsecure() bool {
-	return t.Mode == InsecureTLSMode
+func (t TLSConfig) IsSimple() bool {
+	return t.Mode == SimpleTLSMode
 }
 
 func (t TLSConfig) IsMutual() bool {
